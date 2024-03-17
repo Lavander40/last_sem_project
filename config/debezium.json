@@ -1,0 +1,14 @@
+{
+    "name": "db-connector",
+    "config": {
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "plugin.name": "pgoutput",
+        "database.hostname": "postgre",
+        "database.port": "5432",
+        "database.user": "root",
+        "database.password": "bsg130103",
+        "database.dbname": "users_info_db",
+        "database.server.name": "debezium",
+        "table. include.list": "equipments,rooms,courses,specialities,groups,students,lessons,schedules,attendances"
+    }
+}
