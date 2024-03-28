@@ -114,7 +114,8 @@ services:
       VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
       CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-    command: ["bash", "-c", "cp /debezium-config/debezium.json /config && /kafka/bin/connect-standalone.sh /kafka/config/connect-standalone.properties /config/debezium.json"]
+    volumes:
+      - ./config/debezium.json:/config/debezium.json
     depends_on: [kafka]
     ports:
       - 8083:8083

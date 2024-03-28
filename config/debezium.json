@@ -9,6 +9,6 @@
         "database.password": "bsg130103",
         "database.dbname": "users_info_db",
         "database.server.name": "debezium",
-        "table. include.list": "equipments,rooms,courses,specialities,groups,students,lessons,schedules,attendances"
+        "table. include.list": "groups,students,lessons,schedules,attendances"
     }
 }
