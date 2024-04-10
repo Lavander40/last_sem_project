@@ -64,8 +64,24 @@ CREATE TABLE attendances(
     FOREIGN KEY (sched_id) REFERENCES schedules(id)
 );
 
-ALTER TABLE groups REPLICA IDENTITY FULL;
-ALTER TABLE students REPLICA IDENTITY FULL;
-ALTER TABLE lessons REPLICA IDENTITY FULL;
-ALTER TABLE schedules REPLICA IDENTITY FULL;
-ALTER TABLE attendances REPLICA IDENTITY FULL;
+-- ALTER TABLE groups REPLICA IDENTITY FULL;
+-- ALTER TABLE students REPLICA IDENTITY FULL;
+-- ALTER TABLE lessons REPLICA IDENTITY FULL;
+-- ALTER TABLE schedules REPLICA IDENTITY FULL;
+-- ALTER TABLE attendances REPLICA IDENTITY FULL;
+
+-- CREATE PUBLICATION groups FOR TABLE groups;
+-- CREATE PUBLICATION students FOR TABLE students;
+-- CREATE PUBLICATION lessons FOR TABLE lessons;
+-- CREATE PUBLICATION schedules FOR TABLE schedules;
+-- CREATE PUBLICATION attendances FOR TABLE attendances;
+
+SELECT pg_create_logical_replication_slot('pub_slot', 'pgoutput');
+
+CREATE SUBSCRIPTION subscription
+CONNECTION 'host=postgre port=5432 dbname=users_info_db user=root password=bsg130103'
+PUBLICATION my_publication
+WITH (slot_name = pub_slot, create_slot = false);
+
+CREATE PUBLICATION my_publication FOR TABLE groups, students, lessons, schedules, attendances;
+
