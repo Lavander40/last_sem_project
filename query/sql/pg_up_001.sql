@@ -76,12 +76,7 @@ CREATE TABLE attendances(
 -- CREATE PUBLICATION schedules FOR TABLE schedules;
 -- CREATE PUBLICATION attendances FOR TABLE attendances;
 
+
 SELECT pg_create_logical_replication_slot('pub_slot', 'pgoutput');
 
-CREATE SUBSCRIPTION subscription
-CONNECTION 'host=postgre port=5432 dbname=users_info_db user=root password=bsg130103'
-PUBLICATION my_publication
-WITH (slot_name = pub_slot, create_slot = false);
-
 CREATE PUBLICATION my_publication FOR TABLE groups, students, lessons, schedules, attendances;
-
