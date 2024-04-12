@@ -15,7 +15,7 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
        - ./query/sql/pg_up_001.sql:/docker-entrypoint-initdb.d/pg_up_001.sql
-      #  - ./query/sql/pg_up_002.sql:/docker-entrypoint-initdb.d/pg_up_002.sql
+       - ./query/sql/pg_up_002.sql:/docker-entrypoint-initdb.d/pg_up_002.sql
     command: |
       postgres 
       -c wal_level=logical 
@@ -91,6 +91,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+    # volumes:
+    #   - kafka:/var/lib/kafka/data
     networks:
       - net
 
@@ -127,13 +129,15 @@ services:
       - "-c"
       - |
         confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest && \
+        confluent-hub install --no-prompt neo4j/kafka-connect-neo4j:latest && \
+        confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest && \
         connect-standalone /etc/kafka/standalone.properties /etc/kafka/postgres-source.properties /etc/kafka/neo4j-sink.properties /etc/kafka/elastic-sink.properties && \
         /etc/confluent/docker/run
     networks:
       - net
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:7.5.0
+    image: confluentinc/cp-enterprise-control-center:6.2.0
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -146,11 +150,26 @@ services:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:9092'
       CONTROL_CENTER_CONNECT_CONNECT-DEFAULT_CLUSTER: 'connect:8083'
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_COMMAND_TOPIC_REPLICATION: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_REPLICATION: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_REPLICATION: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONTROL_CENTER_STREAMS_NUM_STREAM_THREADS: 1
+      CONTROL_CENTER_STREAMS_CACHE_MAX_BYTES_BUFFERING: 104857600
       PORT: 9021
+    command:
+      - bash
+      - -c 
+      - |
+        /etc/confluent/docker/run
     networks:
       - net
       
 networks:
   net:
+
+volumes:
+  kafka:
