@@ -120,7 +120,7 @@ services:
     volumes:
       - ./plagins/postgresql-42.7.3.jar:/usr/share/java/postgresql-jdbc-driver.jar
       - ./plagins:/usr/share/java/kafka-connect-jdbc
-      - ./config/standalone.properties:/etc/kafka/standalone.properties
+      - ./config/connect-standalone.properties:/etc/kafka/connect-standalone.properties
       - ./config/postgres-source.properties:/etc/kafka/postgres-source.properties
       - ./config/neo4j-sink.properties:/etc/kafka/neo4j-sink.properties
       - ./config/elastic-sink.properties:/etc/kafka/elastic-sink.properties
@@ -131,7 +131,7 @@ services:
         confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest && \
         confluent-hub install --no-prompt neo4j/kafka-connect-neo4j:latest && \
         confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest && \
-        connect-standalone /etc/kafka/standalone.properties /etc/kafka/postgres-source.properties /etc/kafka/neo4j-sink.properties /etc/kafka/elastic-sink.properties && \
+        connect-standalone /etc/kafka/connect-standalone.properties /etc/kafka/postgres-source.properties /etc/kafka/neo4j-sink.properties /etc/kafka/elastic-sink.properties && \
         /etc/confluent/docker/run
     networks:
       - net
