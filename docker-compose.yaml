@@ -121,13 +121,14 @@ services:
       - ./config/standalone.properties:/etc/kafka/standalone.properties
       - ./config/postgres-source.properties:/etc/kafka/postgres-source.properties
       - ./config/neo4j-sink.properties:/etc/kafka/neo4j-sink.properties
+      - ./config/elastic-sink.properties:/etc/kafka/elastic-sink.properties
     command:
-        - "bash"
-        - "-c"
-        - |
-          confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest && \
-          connect-standalone /etc/kafka/standalone.properties /etc/kafka/postgres-source.properties /etc/kafka/neo4j-sink.properties && \
-          /etc/confluent/docker/run
+      - "bash"
+      - "-c"
+      - |
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest && \
+        connect-standalone /etc/kafka/standalone.properties /etc/kafka/postgres-source.properties /etc/kafka/neo4j-sink.properties /etc/kafka/elastic-sink.properties && \
+        /etc/confluent/docker/run
     networks:
       - net
 
