@@ -103,9 +103,12 @@ services:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
@@ -137,13 +140,15 @@ services:
     volumes:
       - ./plagins/postgresql-42.7.3.jar:/usr/share/java/postgresql-jdbc-driver.jar
       - ./plagins:/usr/share/java/kafka-connect-jdbc
-      - ./config/postgres-source.properties:/etc/kafka/connect-standalone.properties
+      - ./config/standalone.properties:/etc/kafka/standalone.properties
+      - ./config/postgres-source.properties:/etc/kafka/postgres-source.properties
+      - ./config/neo4j-sink.properties:/etc/kafka/neo4j-sink.properties
     command:
         - "bash"
         - "-c"
         - |
           confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest && \
-          connect-standalone /etc/kafka/connect-standalone.properties && \
+          connect-standalone /etc/kafka/standalone.properties /etc/kafka/postgres-source.properties /etc/kafka/neo4j-sink.properties && \
           /etc/confluent/docker/run
 
   # Volovich
