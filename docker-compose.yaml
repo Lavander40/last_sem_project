@@ -42,8 +42,9 @@ services:
       - 7474:7474
       - 7687:7687
     environment:
-      NEO4J_AUTH: ${NEO4J_USER}/${NEO4J_PASSWORD}
-      NEO4J_server_config_strict__validation_enabled: false
+       - NEO4J_PLUGINS=["apoc"]
+       - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
+       - NEO4J_server_config_strict__validation_enabled=false
     networks:
       - net
 
