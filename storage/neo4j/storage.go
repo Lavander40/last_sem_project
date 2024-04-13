@@ -3,7 +3,7 @@ package neo4j
 import (
 	"context"
 	"noname_team_project/config"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 )
 
 type Neo4j struct {

@@ -23,7 +23,7 @@ services:
       - net
 
   elastic:
-    image: elasticsearch:8.10.2
+    image: elasticsearch:7.10.1
     env_file:
       - .env
     ports:
@@ -35,7 +35,7 @@ services:
       - net
 
   neo4j:
-    image: neo4j
+    image: neo4j:4.2.3
     env_file:
       - .env
     ports:
@@ -62,7 +62,7 @@ services:
       - net
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:6.2.0
     ports:
       - 2181:2181
       - 2888:2888
@@ -73,7 +73,7 @@ services:
       - net
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:6.2.0
     ports:
       - "9092:9092"
     depends_on:
@@ -97,7 +97,7 @@ services:
       - net
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:latest
+    image: confluentinc/cp-schema-registry:6.2.0
     ports:
       - "8081:8081"
     depends_on:
@@ -110,7 +110,7 @@ services:
       - net
 
   connect:
-    image: confluentinc/cp-kafka-connect:latest
+    image: confluentinc/cp-kafka-connect-base:6.2.0
     ports:
       - "8083:8083"
     depends_on:
